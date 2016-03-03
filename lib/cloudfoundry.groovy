@@ -29,7 +29,7 @@ def mapRoute(appName, host, cfSpace, cfOrg, cfApiEndpoint) {
         return
     }
     if(activeAppName){
-        input message: "Blue / Green deployment initiated. Do you want to map ${appName} to ${host} along with ${activeAppName}?"
+        input message: "Canary deployment initiated. Do you want to map ${appName} to ${host} along with ${activeAppName}?"
     }
     def domains = getDomains(cfSpace, cfOrg, cfApiEndpoint)
     for(int i = 0; i < (domains.resources.size() as Integer); i++){
@@ -43,10 +43,6 @@ def mapRoute(appName, host, cfSpace, cfOrg, cfApiEndpoint) {
             authenticate(cfApiEndpoint, cfOrg, cfSpace) {
                 sh("cf unmap-route ${activeAppName} ${domains.resources[i].entity.name} -n ${host}")
             }
-        }
-        input message: "Do you want to remove ${activeAppName} completely?"
-        authenticate(cfApiEndpoint, cfOrg, cfSpace) {
-            sh("yes | cf delete ${activeAppName}")
         }
     }
 }

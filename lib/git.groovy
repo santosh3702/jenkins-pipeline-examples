@@ -14,8 +14,8 @@ def mergeBranch(source, target, repositoryUrl, credentialsId){
 }
 
 def authenticatedUrl(url, username, password){
-    encodedUsername = URLEncoder.encode(username, "UTF-8")
-    encodedPassword = URLEncoder.encode(password, "UTF-8")
+    encodedUsername = URLEncoder.encode(username as String, "UTF-8")
+    encodedPassword = URLEncoder.encode(password as String, "UTF-8")
     def bits = (url as String).split("://")
     if(bits.length == 2){
         return bits[0] + "://${encodedUsername}:${encodedPassword}@" + bits[1] as String

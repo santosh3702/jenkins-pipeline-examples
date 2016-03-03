@@ -6,8 +6,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-import static org.hamcrest.core.IsCollectionContaining.hasItem
+import static org.hamcrest.core.StringContains.containsString
 import static org.hamcrest.core.IsEqual.equalTo
+import static org.hamcrest.core.IsNot.not
+import static org.hamcrest.core.IsCollectionContaining.hasItem
 import static org.junit.Assert.assertThat
 import static utilities.ReadFromResources.readFromResources
 
@@ -98,6 +100,26 @@ class CloudfoundryTest {
         }
         def result = cloudfoundry.getActiveAppNameForRoute("hello-boot-v1", "https://api.run.pivotal.io")
         assertThat(result as String, equalTo("hello-boot-1-0-4"))
+    }
+
+    @Test
+    void shouldNotMapRouteWhenRouteAlreadyExistsOnSameApplication() {
+        shell.metaClass.pipe = { String s ->
+            return readFromCfApiResources(s)
+        }
+        cloudfoundry.mapRoute("hello-boot-1-0-4", "hello-boot-v1", "development", "big-red-fun-bus", "https://api.run.pivotal.io")
+        println shellCommands
+        assertThat(shellCommands, not(hasItem(containsString("map-route"))))
+    }
+
+    @Test
+    void shouldMapRouteAndDeletePreviousVersion() {
+        shell.metaClass.pipe = { String s ->
+            return readFromCfApiResources(s)
+        }
+        cloudfoundry.mapRoute("hello-boot-1-0-5", "hello-boot-v1", "development", "big-red-fun-bus", "https://api.run.pivotal.io")
+        assertThat(shellCommands, hasItem(containsString("map-route hello-boot-1-0-5")))
+        assertThat(shellCommands, hasItem(containsString("unmap-route hello-boot-1-0-4")))
     }
 
     private String readFromCfApiResources(String s) {
