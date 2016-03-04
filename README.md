@@ -1,4 +1,6 @@
-# jenkins-pipeline-examples
+# Jenkins Pipeline Examples
+
+Sample maven project including a couple of Jenkins Pipeline scripts. See the included pptx file for the associated presentation.
 
 To set up a pipeline for the hello-boot application in Jenkins use the following
 
