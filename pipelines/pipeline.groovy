@@ -1,6 +1,9 @@
+node(){
+   git-cridentials = load "/var.groovy"
+}
 node() {
-    git poll: false, changelog: false, url: pipelineRepo, credentialsId: "git-credentials", branch: pipelineBranch
-
+    git poll: false, changelog: false, url: pipelineRepo, credentialsId: "git-cridentials.git-cridentials", branch: pipelineBranch
+    
     utilities = load "lib/utilities.groovy"
     cloudfoundry = load "lib/cloudfoundry.groovy"
     shell = load "lib/shell.groovy"
@@ -10,7 +13,7 @@ node() {
 
 stage 'package'
 node() {
-    git url: repositoryUrl, credentialsId: "git-credentials", branch: branch
+    git url: repositoryUrl, credentialsId: "git-cridentials.git-cridentials", branch: branch
     artifactId = pom.artifactId(pwd() + "/pom.xml")
     version = pom.version(pwd() + "/pom.xml")
     majorVersion = pom.majorVersion(pwd() + "/pom.xml")
